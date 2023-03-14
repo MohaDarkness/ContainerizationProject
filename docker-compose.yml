@@ -1,0 +1,88 @@
+version: "3.8"
+
+services:
+  mysql_server:
+    image: mysql:8.0
+    environment: 
+      - MYSQL_DATABASE=test_db
+      - MYSQL_USER=dan
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+    volumes:
+      - ./MySqlDb:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - './mongodb/database:/data/db'
+    ports:
+      - 27017:27017
+    restart: "unless-stopped"
+
+  authenticator:
+    build:
+      context: './Authentication'
+      dockerfile: Dockerfile
+    command: python3 ./script.py
+    ports:
+      - 3005:3005
+    volumes:
+      - ./Authentication:/app
+    restart: unless-stopped
+
+  analytics-service:
+    build:
+      context: './Analytics-Service'
+      dockerfile: Dockerfile
+    command: sh -c "sleep 4s ; python3 ./script.py"
+    ports:
+      - 3001:3001
+    volumes:
+      - ./Analytics-Service:/app
+    restart: unless-stopped
+    depends_on:
+      - mysql_server
+      - mongodb
+ 
+  app:
+    build: 
+      context: './Admin-App'
+      dockerfile: Dockerfile
+    command: node index.js
+    ports: 
+      - 3000:3000
+    volumes: 
+      - ./Admin-App:/app
+      - '/app/node_modules'
+    restart: "unless-stopped"
+    depends_on: 
+      - mysql_server
+      - authenticator
+      - analytics-service
+
+  user_app:
+    build: 
+      context: './User-App'
+      dockerfile: Dockerfile
+    command: node app.js
+    ports: 
+      - 3002:3002
+    volumes: 
+      - ./User-App:/app
+      - '/app/node_modules'
+    restart: "unless-stopped"
+    depends_on: 
+      - analytics-service
+      - mongodb
+
+
+
+    
+
+    

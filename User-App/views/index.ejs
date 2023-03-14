@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>User Applicatoin</title>
+    </head>
+    <body>
+        <form action="/logout" method="POST">
+            <button type="submit">LogOut</button>
+        </form>
+        <h1>Welcome to user application</h1>
+        <br><br>
+        <form action="/fetch" method="get">
+            <button type="submit">Fetch Data</button>
+        </form>
+        <br><br>
+        <p> message: <%=msg%></p>
+        <p> this is min: <%= min %></p>
+        <p> this is max: <%= max %></p>
+        <p> this is avg: <%= avg %></p>
+
+    
+    </body>
+</html>

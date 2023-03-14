@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Hello Admin</title>
+    </head>
+
+    <body>
+        <form action="/logout" method="POST">
+            <button type="submit">LogOut</button>
+        </form>
+        <h1>Admin WebApplication</h1>
+        <form action="/insert" method="POST">
+            <label for="number">Enter number:</label>
+            <input type="number" id="number" name="number" required>
+
+            <button type="submit">Insert The Number</button>
+        </form>
+        <form action="/insertRandom" method="get">
+            <button type="submit">Insert A Random Number</button>
+        </form>
+        <form action="/deleteAll" method="POST">
+            <button type="submit">Delete All Data!!</button>
+        </form>
+        <br>
+        <p>Message: <%=msg%></p>
+        <br><br>
+        <h3>Numbers in mySQL:</h3>
+        <p><%=data%></p>
+    </body>
+</html>
